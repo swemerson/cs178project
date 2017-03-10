@@ -10,7 +10,7 @@ Xt, Xv, Yt, Yv = ml.splitData(X,Y, 0.80)
 
 from sklearn.neighbors import KNeighborsClassifier
 
-knn = KNeighborsClassifier(n_neighbors=15)
+knn = KNeighborsClassifier(n_neighbors=40)
 knn.fit(Xt,Yt)
 Yhat = knn.predict_proba(Xtest)
 
