@@ -15,6 +15,7 @@ Xi, Yi = ml.bootstrapData(Xt,Yt, M)
 forest = ml.dtree.treeClassify()
 forest.train(Xi,Yi,maxDepth=15, minLeaf=4, nFeatures=5)
 
+Yhat = forest.predictSoft(Xtest)
 
 np.savetxt('Yhat_dtree.txt',
           np.vstack((np.arange(len(YhatTr)), YhatTr[:,1])).T, '%d, %.2f',
