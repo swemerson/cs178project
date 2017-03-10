@@ -8,15 +8,12 @@ Xtest = np.genfromtxt("data/X_test.txt",delimiter=None)
 
 Xt, Xv, Yt, Yv = ml.splitData(X,Y, 0.80)
 
-M = Xt.shape[0]
-Mv = Xv.shape[0]
+from sklearn.neighbors import KNeighborsClassifier
 
-Xi, Yi = ml.bootstrapData(Xt,Yt, M)
-forest = ml.dtree.treeClassify()
-forest.train(Xi,Yi,maxDepth=15, minLeaf=4, nFeatures=5)
+knn = KNeighborsClassifier(n_neighbors=15)
+knn.fit(Xt,Yt)
+Yhat = knn.predict_proba(Xtest)
 
-Yhat = forest.predictSoft(Xtest)
-
-np.savetxt('Yhat_dtree.txt',
-          np.vstack((np.arange(len(YhatTr)), YhatTr[:,1])).T, '%d, %.2f',
+np.savetxt('Yhat_knn.txt',
+          np.vstack((np.arange(len(Yhat)), Yhat[:,1])).T, '%d, %.2f',
            header='ID,Prob1', comments='',delimiter=',');
