@@ -33,7 +33,7 @@ minLeaf = 512
 nFeatures = 5
 
 # Knn Settings
-n_neighbors = 100
+n_neighbors = 50
 
 # Linear Settings
 deg = 1
