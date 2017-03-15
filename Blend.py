@@ -19,8 +19,8 @@ if (generateKaggleFile):
     sampleSize = 100000  # Don't change this
     split = 1  # Don't change this
 else:
-    sampleSize = 10000
-    split = 0.80
+    sampleSize = 50000
+    split = 0.75
 
 # Using
 usingDtree = 1
@@ -28,12 +28,13 @@ usingKnn = 1
 usingLinear = 1
 
 # Dtree Settings
-maxDepth = 4
-minLeaf = 512
+maxDepth = 6
+minLeaf = 128
 nFeatures = 5
+nTrees = 100
 
 # Knn Settings
-n_neighbors = 100
+n_neighbors = 15
 
 # Linear Settings
 deg = 1
@@ -62,7 +63,7 @@ def predictSoft(Xte):
     Yhat = [None] * len(Xte)
 
     if (usingDtree):
-        Yhat = np.column_stack((Yhat, Dtree.predictSoft(Xtr, Ytr, Xte, maxDepth, minLeaf, nFeatures)[:, 1]))
+        Yhat = np.column_stack((Yhat, Dtree.predictSoft(Xtr, Ytr, Xte, maxDepth, minLeaf, nFeatures, nTrees)))
 
     if (usingKnn):
         Yhat = np.column_stack((Yhat, Knn.predictSoft(Xtr, Ytr, Xte, n_neighbors)[:, 1]))
@@ -75,9 +76,9 @@ def predictSoft(Xte):
 
 # Calculate MSE
 def mse():
-    print 'Mean squared error: %.2f' % mean_squared_error(predictSoft(Xva), Yva)
+    print 'Mean squared error: %.10f' % mean_squared_error(predictSoft(Xva), Yva)
 
-
+# Generate file for Kaggle submission
 def toKaggle():
     Yhat = predictSoft(Xte)
     np.savetxt('Yhat_knn.txt', np.vstack((np.arange(len(Yhat)), Yhat)).T, '%d, %.2f', header='ID,Prob1', comments='', delimiter=',')

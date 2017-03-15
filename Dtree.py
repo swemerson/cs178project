@@ -1,12 +1,21 @@
+import numpy as np
 import mltools as ml
 
 
-def predictSoft(Xtr, Ytr, Xte, maxDepth, minLeaf, nFeatures):
+def predictSoft(Xtr, Ytr, Xte, maxDepth, minLeaf, nFeatures, nTrees):
 
-    M = Xtr.shape[0]
+    # Set up storage for trees
+    trees = [None] * nTrees
 
-    Xi, Yi = ml.bootstrapData(Xtr, Ytr, M)
-    forest = ml.dtree.treeClassify()
-    forest.train(Xi, Yi, maxDepth=maxDepth, minLeaf=minLeaf, nFeatures=nFeatures)
+    # Make trees
+    for i in range(nTrees):
+        M = Xtr.shape[0]
+        Xi, Yi = ml.bootstrapData(Xtr, Ytr, M)
+        trees[i] = ml.dtree.treeClassify(Xi, Yi, maxDepth=maxDepth, minLeaf=minLeaf, nFeatures=nFeatures)
 
-    return forest.predictSoft(Xte)
+    predictXte = np.zeros((Xte.shape[0], nTrees))
+
+    for i in range(nTrees):
+        predictXte[:, i] = trees[i].predict(Xte)
+
+    return np.mean(predictXte, axis=1)
