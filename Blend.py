@@ -1,5 +1,6 @@
 import numpy as np
 import mltools as ml
+import matplotlib.pyplot as plt
 import Dtree
 import Knn
 import Linear
@@ -25,7 +26,7 @@ else:
 # Using
 usingDtree = 1
 usingKnn = 1
-usingLinear = 1
+usingLinear = 0
 
 # Dtree Settings
 maxDepth = 6
@@ -66,7 +67,7 @@ def predictSoft(Xte):
         Yhat = np.column_stack((Yhat, Dtree.predictSoft(Xtr, Ytr, Xte, maxDepth, minLeaf, nFeatures, nTrees)))
 
     if (usingKnn):
-        Yhat = np.column_stack((Yhat, Knn.predictSoft(Xtr, Ytr, Xte, n_neighbors)[:, 1]))
+        Yhat = np.column_stack((Yhat, Knn.predictSoft(Xtr, Ytr, Xte, n_neighbors)))
 
     if (usingLinear):
         Yhat = np.column_stack((Yhat, Linear.predictSoft(Xtr, Ytr, Xte, deg)))
@@ -76,7 +77,9 @@ def predictSoft(Xte):
 
 # Calculate MSE
 def mse():
-    print 'Mean squared error: %.10f' % mean_squared_error(predictSoft(Xva), Yva)
+    mean = mean_squared_error(predictSoft(Xva), Yva)
+    print 'Mean squared error: %.10f' % mean
+    return mean
 
 # Generate file for Kaggle submission
 def toKaggle():
@@ -93,5 +96,13 @@ def toKaggle():
 if generateKaggleFile:
     toKaggle()
 else:
-    mse()
+    global n_neighbors
+    means = [0] * 25
+    for i in range(30, 55):
+        print i
+        n_neighbors = i
+        means[i-30] = mse()
+
+    plt.plot(means)
+    plt.show()
 

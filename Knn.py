@@ -1,4 +1,4 @@
-from sklearn.neighbors import KNeighborsClassifier
+from sklearn.neighbors import KNeighborsRegressor
 
 
 def predictSoft(Xtr, Ytr, Xte, n_neighbors):
