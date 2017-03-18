@@ -45,7 +45,7 @@ deg = 1
 # Gradient Boosting Settings
 n_estimators = 1000
 max_depth = 16
-min_samples_split = 16
+min_samples_split = 2
 learning_rate = 0.01
 
 
