@@ -44,7 +44,7 @@ deg = 1
 
 # Gradient Boosting Settings
 n_estimators = 1000
-max_depth = 32
+max_depth = 16
 min_samples_split = 16
 learning_rate = 0.01
 
@@ -138,3 +138,4 @@ else:
     #plt.plot(aucs)
     #plt.show()
     auc(predictSoft(Xva), Yva)
+    #mse()
