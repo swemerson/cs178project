@@ -1,6 +1,6 @@
 import numpy as np
 import mltools as ml
-
+from sklearn.ensemble import RandomForestRegressor
 
 def predictSoft(Xtr, Ytr, Xte, maxDepth, minLeaf, nFeatures, nTrees):
 
@@ -11,7 +11,8 @@ def predictSoft(Xtr, Ytr, Xte, maxDepth, minLeaf, nFeatures, nTrees):
     for i in range(nTrees):
         M = Xtr.shape[0]
         Xi, Yi = ml.bootstrapData(Xtr, Ytr, M)
-        trees[i] = ml.dtree.treeClassify(Xi, Yi, maxDepth=maxDepth, minLeaf=minLeaf, nFeatures=nFeatures)
+        trees[i] = RandomForestRegressor(n_estimators=nFeatures, max_depth=maxDepth, min_samples_leaf= minLeaf)
+        trees[i] = trees[i].fit(Xi, Yi)
 
     predictXte = np.zeros((Xte.shape[0], nTrees))
 
