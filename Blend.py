@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import Dtree
 import Knn
 import linear
+import GradientBoosting
 
 from sklearn.metrics import mean_squared_error
 
@@ -14,19 +15,20 @@ from sklearn.metrics import mean_squared_error
 ################################################################################
 
 # General Settings
-generateKaggleFile = 1
+generateKaggleFile = 0
 
 if (generateKaggleFile):
     sampleSize = 100000  # Don't change this
     split = 1  # Don't change this
 else:
-    sampleSize = 5000
+    sampleSize = 10000
     split = 0.75
 
 # Using
-usingDtree = 1
-usingKnn = 1
-usingLinear = 1
+usingDtree = 0
+usingKnn = 0
+usingLinear = 0
+usingGradientBoosting = 1
 
 # Dtree Settings
 maxDepth = 19
@@ -39,6 +41,12 @@ n_neighbors = 39
 
 # Linear Settings
 deg = 1
+
+# Gradient Boosting Settings
+n_estimators = 1000
+max_depth = 32
+min_samples_split = 16
+learning_rate = 0.01
 
 
 
@@ -71,6 +79,9 @@ def predictSoft(Xte):
 
     if (usingLinear):
         Yhat = np.column_stack((Yhat, linear.predictSoft(Xtr, Ytr, Xte, deg)))
+
+    if (usingGradientBoosting):
+        Yhat = np.column_stack((Yhat, GradientBoosting.predictSoft(Xtr, Ytr, Xte, n_estimators, max_depth, min_samples_split, learning_rate)))
 
     return np.mean(Yhat[:, 1:], axis=1)
 
