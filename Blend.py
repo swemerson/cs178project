@@ -5,6 +5,7 @@ import Dtree
 import Knn
 import linear
 import GradientBoosting
+import SVM
 
 from sklearn.metrics import mean_squared_error
 
@@ -28,13 +29,14 @@ else:
 usingDtree = 0
 usingKnn = 0
 usingLinear = 0
-usingGradientBoosting = 1
+usingGradientBoosting = 0
+usingSVM = 1
 
 # Dtree Settings
 maxDepth = 19
 minLeaf = 64
 nFeatures = 12
-nTrees = 200
+nTrees = 150
 
 # Knn Settings
 n_neighbors = 39
@@ -44,8 +46,8 @@ deg = 1
 
 # Gradient Boosting Settings
 n_estimators = 1000
-max_depth = 16
-min_samples_split = 2
+max_depth = 6
+min_samples_split = 100
 learning_rate = 0.01
 
 
@@ -82,6 +84,9 @@ def predictSoft(Xte):
 
     if (usingGradientBoosting):
         Yhat = np.column_stack((Yhat, GradientBoosting.predictSoft(Xtr, Ytr, Xte, n_estimators, max_depth, min_samples_split, learning_rate)))
+
+    if (usingSVM):
+        Yhat = np.column_stack((Yhat, SVM.predictSoft(Xtr, Ytr, Xte)))
 
     return np.mean(Yhat[:, 1:], axis=1)
 
