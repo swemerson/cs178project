@@ -6,6 +6,7 @@ import Knn
 import linear
 import GradientBoosting
 import SVM
+import time
 
 from sklearn.metrics import mean_squared_error
 
@@ -26,11 +27,11 @@ else:
     split = 0.75
 
 # Using
-usingDtree = 0
+usingDtree = 1
 usingKnn = 0
 usingLinear = 0
-usingGradientBoosting = 0
-usingSVM = 1
+usingGradientBoosting = 1
+usingSVM = 0
 
 # Dtree Settings
 maxDepth = 19
@@ -92,9 +93,9 @@ def predictSoft(Xte):
 
 
 # Calculate MSE
-def mse():
-    mean = mean_squared_error(predictSoft(Xva), Yva)
-    print 'MSE: ' + str(mean)
+def mse(Yhat, Y):
+    mean = mean_squared_error(Yhat, Y)
+    print 'MSE: %.4f' % mean
     return mean
 
 # Calculate AUC
@@ -115,7 +116,7 @@ def auc(soft, Y):
 
     # compute AUC using Mann-Whitney U statistic
     result = (np.sum(rnk[Y == 1]) - n1 * (n1 + 1.0) / 2.0) / n1 / n0
-    print 'AUC: ' + str(result)
+    print 'AUC: %.4f' % result
     return result
 
 # Generate file for Kaggle submission
@@ -128,6 +129,8 @@ def toKaggle():
 ################################################################################
 ###################   Main   ###################################################
 ################################################################################
+
+start = time.time()
 
 # Use split=1 and sampleSize=100000 to output Kaggle file
 if generateKaggleFile:
@@ -142,5 +145,11 @@ else:
 
     #plt.plot(aucs)
     #plt.show()
-    auc(predictSoft(Xva), Yva)
-    #mse()
+
+    Yhat = predictSoft(Xtr)
+    mse(Yhat, Ytr)
+    auc(Yhat, Ytr)
+
+end = time.time()
+
+print 'Seconds elapsed: %.4f' % (end - start)
